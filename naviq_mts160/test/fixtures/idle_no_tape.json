@@ -1,7 +1,7 @@
 {
   "description": "idle: sensor high above the bed, no tape or markers in range, steppers idle",
   "node_id": 10,
-  "recorded": "2026-09-23T22:04:16",
+  "recorded": "2026-09-23T22:05:36",
   "source": "bench WSL2 gs_usb via usbipd; driver ~/raw",
   "segments": [
     {
@@ -18,7 +18,29 @@
       "truth": {
         "tape": false
       },
-      "expect": {}
+      "expect": {
+        "strength": {
+          "max": 0
+        },
+        "left_marker": {
+          "fraction_true_max": 0.0
+        },
+        "right_marker": {
+          "fraction_true_max": 0.0
+        },
+        "single_track": {
+          "fraction_true_min": 1.0
+        },
+        "left_position_mm": {
+          "mean": 0.0,
+          "tol": 0.01
+        },
+        "navicode_counter_changes": 0,
+        "tpdo1_rate_hz": {
+          "min": 90,
+          "max": 110
+        }
+      }
     }
   ]
 }
