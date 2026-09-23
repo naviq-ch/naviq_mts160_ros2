@@ -13,6 +13,7 @@ from launch.actions import DeclareLaunchArgument
 from launch.conditions import IfCondition
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
+from launch_ros.parameter_descriptions import ParameterValue
 
 
 def generate_launch_description():
@@ -31,13 +32,14 @@ def generate_launch_description():
         DeclareLaunchArgument("namespace", default_value=""),
     ]
 
+    # can_channel is a string parameter but "0" or "1:4" would be YAML-parsed as a number: force the type.
     params = [{
-        "can_interface_type": LaunchConfiguration("can_interface_type"),
-        "can_channel": LaunchConfiguration("can_channel"),
-        "can_bitrate": LaunchConfiguration("can_bitrate"),
-        "node_id": LaunchConfiguration("node_id"),
-        "frame_id": LaunchConfiguration("frame_id"),
-        "publish_raw": LaunchConfiguration("publish_raw"),
+        "can_interface_type": ParameterValue(LaunchConfiguration("can_interface_type"), value_type=str),
+        "can_channel": ParameterValue(LaunchConfiguration("can_channel"), value_type=str),
+        "can_bitrate": ParameterValue(LaunchConfiguration("can_bitrate"), value_type=int),
+        "node_id": ParameterValue(LaunchConfiguration("node_id"), value_type=int),
+        "frame_id": ParameterValue(LaunchConfiguration("frame_id"), value_type=str),
+        "publish_raw": ParameterValue(LaunchConfiguration("publish_raw"), value_type=bool),
     }]
     # A params_file, if given, is applied on top of the launch arguments.
     params_file = LaunchConfiguration("params_file")

@@ -1,0 +1,24 @@
+{
+  "description": "idle: sensor high above the bed, no tape or markers in range, steppers idle",
+  "node_id": 10,
+  "recorded": "2026-09-23T22:04:16",
+  "source": "bench WSL2 gs_usb via usbipd; driver ~/raw",
+  "segments": [
+    {
+      "name": "idle",
+      "t_start": 0.0,
+      "t_end": 5.0,
+      "printer": {
+        "x": null,
+        "y": null,
+        "z": null,
+        "e": null,
+        "yaw_deg": null
+      },
+      "truth": {
+        "tape": false
+      },
+      "expect": {}
+    }
+  ]
+}
