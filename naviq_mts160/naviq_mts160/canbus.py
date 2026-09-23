@@ -78,6 +78,77 @@ def _gs_usb_kwargs(channel: str, bitrate: int) -> dict:
     raise CanBusError(f"no gs_usb device with serial '{text}' found")
 
 
+def _patch_gs_usb_start() -> None:
+    """Make the ``gs_usb`` package's ``GsUsb.start()`` leave the device usable over libusb.
+
+    ``GsUsb.start()`` issues a USB port reset and then immediately sends the
+    MODE control request.  Over libusb (native Windows/WinUSB as well as
+    usbip into WSL2) the device comes back from that reset *unconfigured*:
+    control transfers and the CAN peripheral work (the sensor's frames are
+    acknowledged) but the bulk endpoints are not enabled, so no frame ever
+    reaches the host.  Measured on the bench 2026-09-23 (candleLight sw 2 /
+    hw 1, CANable-MKS).  The Linux kernel driver never resets the device.
+    This replacement re-selects the configuration, claims interface 0,
+    clears the endpoint halts and sends HOST_FORMAT before starting.
+    """
+    try:
+        import struct
+        import usb.core
+        import usb.util
+        from gs_usb import gs_usb as gsmod
+        from gs_usb.gs_usb import GsUsb
+    except Exception:  # pragma: no cover - gs_usb not installed
+        return
+    if getattr(GsUsb, "_naviq_patched", False):
+        return
+    mode_cls = getattr(gsmod, "DeviceMode", None)
+    breq_mode = getattr(gsmod, "_GS_USB_BREQ_MODE", 2)
+    breq_host_format = getattr(gsmod, "_GS_USB_BREQ_HOST_FORMAT", 0)
+    start_val = getattr(gsmod, "GS_CAN_MODE_START", 1)
+    supported = (getattr(gsmod, "GS_CAN_MODE_LISTEN_ONLY", 1) | getattr(gsmod, "GS_CAN_MODE_LOOP_BACK", 2)
+                 | getattr(gsmod, "GS_CAN_MODE_ONE_SHOT", 8) | getattr(gsmod, "GS_CAN_MODE_HW_TIMESTAMP", 16))
+    default_flags = getattr(gsmod, "GS_CAN_MODE_NORMAL", 0) | getattr(gsmod, "GS_CAN_MODE_HW_TIMESTAMP", 16)
+
+    def start(self, flags=default_flags):
+        dev = self.gs_usb
+        dev.reset()
+        time.sleep(0.2)
+        try:
+            if dev.is_kernel_driver_active(0):
+                dev.detach_kernel_driver(0)
+        except Exception:
+            pass
+        try:
+            dev.set_configuration()
+        except usb.core.USBError as exc:
+            log.debug("gs_usb set_configuration: %s", exc)
+        try:
+            usb.util.claim_interface(dev, 0)
+        except usb.core.USBError as exc:
+            log.debug("gs_usb claim_interface: %s", exc)
+        for ep in (0x81, 0x02):
+            try:
+                dev.clear_halt(ep)
+            except usb.core.USBError:
+                pass
+        try:
+            dev.ctrl_transfer(0x41, breq_host_format, 0, 0, struct.pack("<I", 0x0000BEEF))
+        except usb.core.USBError as exc:
+            log.debug("gs_usb host format: %s", exc)
+        flags &= self.device_capability.feature
+        flags &= supported
+        self.device_flags = flags
+        if mode_cls is not None:
+            payload = mode_cls(start_val, flags).pack()
+        else:
+            payload = struct.pack("<II", start_val, flags)
+        dev.ctrl_transfer(0x41, breq_mode, 0, 0, payload)
+
+    GsUsb.start = start
+    GsUsb._naviq_patched = True
+    log.info("gs_usb: GsUsb.start() patched (configure + claim + clear halts after reset)")
+
+
 class CanBus:
     """Owns a python-can ``Bus`` and a reader thread.
 
@@ -139,6 +210,7 @@ class CanBus:
     # ------------------------------------------------------------ lifecycle
     def _build_kwargs(self) -> dict:
         if self.interface_type == "gs_usb":
+            _patch_gs_usb_start()
             kwargs = _gs_usb_kwargs(self.channel, self.bitrate)
         elif self.interface_type == "socketcan":
             kwargs = {"interface": "socketcan", "channel": self.channel}
