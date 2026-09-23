@@ -1,0 +1,155 @@
+# naviq_mts160_ros2
+
+ROS 2 driver for the **Naviq MTS160** magnetic guide sensor
+(CANopen TPDOs parsed directly, no CANopen stack), plus the bench tooling used
+to validate it against physical ground truth on a motorised 3D-printer
+fixture.
+
+| package | what |
+|---|---|
+| `naviq_msgs` | `TrackDetection`, `Markers`, `Navicode`, `RawTpdo` messages; `SelfTest`, `Zero` services |
+| `naviq_mts160` | the `mts160` node (`rclpy` + `python-can`), launch file, example config, tests |
+| `tools/naviq_mts160_fixture` | development-only: printer fixture control, calibration, survey, characterisation, report |
+
+Target: ROS 2 **Jazzy** / Ubuntu 24.04 / Python 3.12. Licence: Apache-2.0.
+
+## Five-minute quickstart
+
+Prerequisites: a Jazzy install, the sensor on a CAN bus at 500 kbit/s with
+node ID 10, auto-run enabled and TPDO1 enabled (factory tool or serial
+`!CNCF`), and a CAN adapter.
+
+```bash
+# 1. dependencies
+sudo apt install ros-jazzy-diagnostic-updater python3-pip can-utils
+python3 -m pip install --user --break-system-packages "python-can>=4.4"   # + gs_usb if you use that backend
+
+# 2. build
+mkdir -p ~/ros2_ws/src && cd ~/ros2_ws/src
+git clone https://github.com/naviq/naviq_mts160_ros2.git
+cd ~/ros2_ws && colcon build --symlink-install && source install/setup.bash
+
+# 3a. Linux robot with SocketCAN (kernel gs_usb / any CAN interface)
+sudo ip link set can0 up type can bitrate 500000
+ros2 launch naviq_mts160 driver.launch.py can_interface_type:=socketcan can_channel:=can0
+
+# 3b. WSL2 / no SocketCAN: candleLight / CANable adapter from user space
+ros2 launch naviq_mts160 driver.launch.py can_interface_type:=gs_usb can_channel:=0
+
+# 4. look
+ros2 topic echo /mts160/track
+ros2 topic echo /diagnostics
+ros2 service call /mts160/self_test naviq_msgs/srv/SelfTest
+```
+
+## Node `mts160`
+
+**Parameters**
+
+| name | default | meaning |
+|---|---|---|
+| `can_interface_type` | `socketcan` | python-can backend: `socketcan`, `gs_usb`, `virtual`, ... |
+| `can_channel` | `can0` | interface name (socketcan) or device index / `bus:address` / serial (gs_usb) |
+| `can_bitrate` | `500000` | only used by backends that set the bitrate themselves (gs_usb) |
+| `node_id` | `10` | CANopen node ID (1..127) |
+| `frame_id` | `mts160_link` | header frame of all messages |
+| `timeout_ms` | `100` | no TPDO1 for this long → `/diagnostics` ERROR |
+| `publish_raw` | `false` | publish every frame from the node on `~/raw` |
+| `invert_position` | `false` | mounting flip: negate positions and the marker lateral (X) axis |
+| `invert_angle` | `false` | mounting flip: negate angles |
+| `tpdo1_period_ms` / `tpdo2_period_ms` / `tpdo3_period_ms` | `0` | `0` leaves the sensor alone; `>0` writes the CANopen event timer (SDO `0x1800..0x1802:5`) at startup, RAM only |
+| `sdo_timeout_ms` | `500` | SDO response timeout |
+| `heartbeat_timeout_s` | `3.0` | heartbeat older than this → ERROR |
+
+The driver never changes bitrate, node ID, heartbeat, auto-run, termination,
+polarity or thresholds, and never sends `!SAVE`.
+
+**Topics** (all stamped with the CAN receive time)
+
+| topic | type | source |
+|---|---|---|
+| `~/track` | `naviq_msgs/TrackDetection` | TPDO1 `0x180+id` every 10 ms: left/right position (mm) and angle (deg), strength, flags |
+| `~/markers` | `naviq_msgs/Markers` | TPDO2 `0x280+id`: marker X/Y in 0.1 mm, detected flags copied from the latest TPDO1 |
+| `~/navicode` | `naviq_msgs/Navicode` | TPDO3 `0x380+id`: code, counter, `is_new` on counter change |
+| `~/raw` | `naviq_msgs/RawTpdo` | every frame from the node (optional) |
+| `/diagnostics` | `diagnostic_msgs/DiagnosticArray` | bus state, heartbeat/NMT state, TPDO rates, data timeout, frame-length errors, last self-test, receive→publish latency |
+
+**Services**: `~/self_test` (SDO write `0x2001`, wait 50 ms, read `0x2003:1..3`),
+`~/zero` (SDO write `0x2000`; the firmware stores the zero reference in flash
+itself — see `application/src/sensing.c` in the firmware — so it persists).
+
+**TF**: the driver publishes nothing; `driver.launch.py` starts an example
+static transform `base_link → mts160_link` (`publish_static_tf:=false` to disable).
+
+**Extra**: `ros2 run naviq_mts160 mts160_line_follower` — a minimal
+proportional `/cmd_vel` follower on `~/track` (example only).
+
+## Frame layouts (from the manual, verified against the firmware)
+
+```
+TPDO1 0x18A (5 B):  int8 left_pos | int8 right_pos | int8 left_angle | int8 right_angle | u8 status
+      status bits 7..0: merge | fork | intersection | right_marker | left_marker | strength[1] | strength[0] | unused(0)
+TPDO2 0x28A (8 B):  int16 LE left_x | left_y | right_x | right_y   (0.1 mm/LSB)
+TPDO3 0x38A (3 B):  u16 LE navicode | u8 counter
+HB    0x70A (1 B):  NMT state (0x05 operational, 0x7F pre-operational, 0x04 stopped)
+SDO   0x60A request / 0x58A response, expedited only
+```
+
+Frames are filtered with `(id & 0x7F) == node_id` and dispatched on
+`id & 0x780`; wrong payload lengths are counted in diagnostics and dropped.
+
+## Sign conventions
+
+*Filled in from the bench measurements (spec §8); until then the manual's
+statements apply.*
+
+* **Lateral position**: mm from the sensor centre, left negative / right
+  positive (manual). Measured: see `tools/calibration.yaml`
+  (`position_sign_convention`).
+* **Track angle**: measured convention in `tools/calibration.yaml`
+  (`angle_sign_convention`); formula `alpha_true = phi_trunk - yaw`.
+* **Marker X/Y**: firmware source shows X = lateral position of the marker
+  (same axis as the track position) and Y = longitudinal (front/back row
+  amplitude ratio). Measured: `marker_axes_convention`.
+* `invert_position` / `invert_angle` flip the driver's output for a mirrored
+  mounting; with both false the driver reports exactly what §8 measured.
+
+## Development bench (WSL2)
+
+The driver was validated on a Windows PC running the whole stack in **WSL2
+Ubuntu 24.04**; the CANable-MKS (candle firmware), the printer's CH340 serial
+and the sensor's USB console are attached with `usbipd-win`. There is no
+SocketCAN in the stock WSL2 kernel, so the driver uses python-can's `gs_usb`
+backend there. See `tools/bench_setup.md` (cold-boot procedure),
+`tools/bench_notes.md` (log), `tools/calibration.yaml`, `tools/bed_map.yaml`
+and `report/summary.md`.
+
+Fixture tooling (never part of the released driver):
+
+```bash
+cd tools
+python3 -m naviq_mts160_fixture.calibrate baseline --assume-homed     # 7.2
+python3 -m naviq_mts160_fixture.calibrate rotation --assume-homed     # 7.3
+python3 -m naviq_mts160_fixture.survey --assume-homed                 # 7.4
+python3 -m naviq_mts160_fixture.characterize --assume-homed all       # 8.x
+python3 -m naviq_mts160_fixture.report                                # summary.md
+```
+
+## Tests
+
+```bash
+cd ~/ros2_ws && colcon test --packages-select naviq_mts160 --event-handlers console_direct+
+colcon test-result --verbose
+```
+
+* `test_decoder.py`, `test_sdo.py`, `test_canbus.py`: pure Python (no ROS,
+  no hardware): every field, sign, scale, flag bit, wrong length, node-ID
+  filter, negative int16 markers, `is_new`, SDO codec + client, bus wrapper.
+* `test_replay.py`: recorded `candump -l` fixtures with ground-truth JSON
+  (`test/fixtures/`) through the decoder and through the live node on
+  python-can's in-process `virtual` bus; on a host with `vcan0` the node is
+  also run as a separate process over SocketCAN with the log replayed.
+* `test_launch.py` (`launch_testing`): the node starts from the launch file,
+  invalid parameters are rejected, `/diagnostics` goes ERROR→OK when frames
+  arrive (cross-process `udp_multicast` backend, needs `python3-msgpack`).
+* CI: `.github/workflows/ci.yml` (`ros-tooling/setup-ros` + `action-ros-ci`, Jazzy).

@@ -1,0 +1,29 @@
+# Example parameter file for the MTS160 driver.
+#   ros2 run naviq_mts160 mts160 --ros-args --params-file config/example.yaml
+#   ros2 launch naviq_mts160 driver.launch.py params_file:=config/example.yaml
+mts160:
+  ros__parameters:
+    # --- CAN backend -------------------------------------------------------
+    can_interface_type: socketcan   # socketcan on a Linux robot; gs_usb on the WSL2 bench
+    can_channel: can0               # "0" (device index), "1:4" (bus:address) or a serial for gs_usb
+    can_bitrate: 500000             # only used by gs_usb (socketcan takes the OS setting)
+    node_id: 10
+
+    # --- output ------------------------------------------------------------
+    frame_id: mts160_link
+    publish_raw: false              # publish every frame from the node on ~/raw (candump-style recording)
+    timeout_ms: 100                 # no TPDO1 for this long -> diagnostics ERROR
+    heartbeat_timeout_s: 3.0
+
+    # --- mounting conventions (see README "Sign conventions") ---------------
+    invert_position: false          # negate positions and the marker lateral axis
+    invert_angle: false             # negate angles
+
+    # --- sensor TPDO periods (0 = leave the sensor's own setting alone) -----
+    # >0 writes the CANopen event timer (SDO 0x1800..0x1802 sub 5) at startup.
+    # RAM only: the sensor reverts to its saved configuration at power cycle.
+    tpdo1_period_ms: 0
+    tpdo2_period_ms: 0
+    tpdo3_period_ms: 0
+
+    sdo_timeout_ms: 500

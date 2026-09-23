@@ -1,0 +1,7 @@
+# Run the sensor's internal magnetic self-test (SDO 0x2001), wait for it to
+# complete (~30 ms), then read the result registers (SDO 0x2003:1..3).
+# Keep the sensor stationary in a stable magnetic environment while it runs.
+---
+bool passed              # result register == 1
+uint16 min_delta_ut      # smallest field change measured by any sensing element, microtesla
+uint16 max_delta_ut      # largest field change, microtesla

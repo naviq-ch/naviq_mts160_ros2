@@ -1,0 +1,7 @@
+# Start zero-level calibration (SDO 0x2000). The sensor must be over bare
+# floor, away from tape, markers and other magnetic sources, and stationary.
+# Firmware (application/src/sensing.c, sensing_zero_sensor) saves the zero
+# reference to non-volatile memory itself, so this persists across power
+# cycles; see README.
+---
+bool ok                  # SDO download acknowledged by the sensor
