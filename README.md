@@ -104,7 +104,7 @@ Frames are filtered with `(id & 0x7F) == node_id` and dispatched on
 
 ## Sign conventions
 
-Measured on the bench (spec §8, `report/summary.md`, `tools/calibration.yaml`):
+Measured on the bench (`report/summary.md`, `tools/calibration.yaml`):
 
 * **Lateral position** (`Track.position_mm`): mm from the sensor centre, left negative / right positive.
   Measured: moving the sensor toward printer +Y at yaw 0 makes the reported position more *positive*
@@ -152,7 +152,7 @@ python3 -m naviq_mts160_fixture.calibrate baseline --assume-homed     # 7.2
 python3 -m naviq_mts160_fixture.calibrate rotation --assume-homed     # 7.3
 python3 -m naviq_mts160_fixture.survey --assume-homed                 # 7.4
 python3 -m naviq_mts160_fixture.characterize --assume-homed all       # 8.x
-python3 -m naviq_mts160_fixture.export_fixtures                       # data/ -> test/fixtures (spec 9)
+python3 -m naviq_mts160_fixture.export_fixtures                       # data/ -> test/fixtures
 python3 -m naviq_mts160_fixture.report                                # summary.md
 ```
 
