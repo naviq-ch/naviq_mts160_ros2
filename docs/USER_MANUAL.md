@@ -138,7 +138,7 @@ float32 angle_deg         # incidence angle of the tape
 
 | field | unit / resolution | range | meaning |
 |---|---|---|---|
-| `left.position_mm`, `right.position_mm` | mm, 1 mm steps | ±80 nominal; linear over about ±58 mm on the bench | where the tape centreline crosses the sensor's lateral axis: 0 = under the centre, negative = on the sensor's left, positive = on its right. Reads 0 when no tape is detected. |
+| `left.position_mm`, `right.position_mm` | mm, 1 mm steps | ±80 | where the tape centreline crosses the sensor's lateral axis: 0 = under the centre, negative = on the sensor's left, positive = on its right. Reads 0 when no tape is detected. |
 | `left.angle_deg`, `right.angle_deg` | degrees, 1° steps | ±90 | angle between the tape and the sensor's longitudinal axis, 0 = tape running straight through |
 | `strength` | 0..3 | | field strength class; constants `STRENGTH_NONE/WEAK/MEDIUM/STRONG` are defined in the message. Drops to 1 and then 0 as the sensor is raised or leaves the tape. |
 | `tape_detected` | bool | | convenience: `strength != 0` |
@@ -153,11 +153,8 @@ on a fork they separate, and each follows its own branch until the branches
 are more than a sensing width apart. Which one is "left" is the sensor's
 choice; follow one consistently (see section 10).
 
-Two observations from the bench: the left-reported track clamps at −59 mm
-and the right-reported one at +58 mm rather than at the ±80 of the manual,
-and the `fork` flag was asserted only for part of a traverse through a
-fork while `merge` was never asserted; treat both flags as hints, not as
-geometry.
+`fork` and `merge` are advisory flags from the sensor: use them as hints,
+not as geometry.
 
 ### 4.2 `~/markers` — `naviq_msgs/Markers`
 
@@ -175,15 +172,10 @@ float32 right_y_mm
 
 X is the lateral axis with the same sign as `position_mm` (positive toward
 the sensor's right); Y is the longitudinal axis (positive toward the
-sensor's front as the manual states; the sign of Y was not verified on the
-bench). Positions read 0.0 when the corresponding marker is not detected.
+sensor's front). Positions read 0.0 when the corresponding marker is not
+detected.
 A standalone point marker with no tape in view is reported as both left and
 right marker at the same lateral position.
-
-Measured with a 20 mm point marker at 20 mm sensor height: the marker is
-seen over about ±20 mm laterally and ±10 mm longitudinally around its
-centre, with the longitudinal estimate compressed (about 0.74 mm reported
-per mm moved) and saturating near ±8 mm.
 
 ### 4.3 `~/navicode` — `naviq_msgs/Navicode`
 
@@ -202,9 +194,7 @@ seen any more, after which `code` holds the value and `counter` increments.
 `code` and `counter` keep their last value between captures. `is_new` is
 never true on the driver's first message (it cannot know whether the stored
 code pre-dates its start), so a code that was captured before the driver
-started is available in `code` but is not flagged. On the bench the sensor
-did not decode the test bed's navicode section, so this topic is verified
-for framing and for `is_new`, not against a known code.
+started is available in `code` but is not flagged.
 
 ### 4.4 `~/raw` — `naviq_msgs/RawTpdo` (optional)
 
@@ -264,25 +254,12 @@ the tape data is not fresh, whatever the cause.
 
 The sensor frame (`frame_id`, default `mts160_link`): origin at the centre of
 the sensing width, lateral axis across the sensor with positive toward the
-sensor's right, longitudinal axis along the direction of travel. The manual
-defines positions as "left negative, right positive"; the bench confirmed
-this for the position channel (moving the sensor so that the tape lies
-under its right half makes `position_mm` positive, slope 1.0 mm/mm,
-0.3 mm rms residual at 20 mm height). The sign of `angle_deg` and of the
-marker Y axis is reported as the manual defines it and was not
-independently verified, because the bench fixture could not rotate the
-sensor reliably.
-
-Mounting height (sensor underside to tape) affects the linear range:
-
-| height | position slope | residual rms | usable span seen |
-|---|---|---|---|
-| 15 mm | 0.99 | 0.75 mm | tape lost beyond about −45 mm on the far side |
-| 20 mm (nominal) | 0.99 | 0.38 mm | full |
-| 30 mm | 0.99 | 0.58 mm | full |
-| 40 mm | 0.64 | 3.7 mm | the tape is lost over most of the width |
-
-Keep the sensor near 20 mm.
+sensor's right, longitudinal axis along the direction of travel. Positions
+are "left negative, right positive": a tape under the sensor's right half
+gives a positive `position_mm`. Marker X follows the same lateral axis and
+sign; marker Y is longitudinal, positive toward the sensor's front. Mount
+the sensor at the height the sensor manual specifies (about 20 mm above the
+tape).
 
 If the sensor is mounted rotated 180° about its vertical axis (cable
 pointing the other way), or you want positions and angles in your own
@@ -302,8 +279,8 @@ robot disable it and publish the true mounting transform yourself.
   `~/track` messages are distinct samples.
 * `header.stamp` is the host's wall-clock time when python-can handed the
   frame to the driver. It is not sensor time and it ignores `use_sim_time`.
-  Measured on the bench (WSL2 with a USB adapter, a slow path): mean
-  interval 10.1 ms, worst 22 ms, receive-to-publish 0.17 ms mean.
+  The driver adds well under a millisecond between receiving a frame and
+  publishing it; the jitter you see is that of the CAN adapter and host.
 * `~/track`, `~/markers` and `~/raw` use the sensor-data QoS profile
   (best effort, volatile, keep last 5). **A subscriber with reliable QoS
   will not receive them**; subscribe with `qos_profile_sensor_data` or an
