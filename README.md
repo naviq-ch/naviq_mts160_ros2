@@ -100,19 +100,23 @@ Frames are filtered with `(id & 0x7F) == node_id` and dispatched on
 
 ## Sign conventions
 
-*Filled in from the bench measurements (spec §8); until then the manual's
-statements apply.*
+Measured on the bench (spec §8, `report/summary.md`, `tools/calibration.yaml`):
 
-* **Lateral position**: mm from the sensor centre, left negative / right
-  positive (manual). Measured: see `tools/calibration.yaml`
-  (`position_sign_convention`).
-* **Track angle**: measured convention in `tools/calibration.yaml`
-  (`angle_sign_convention`); formula `alpha_true = phi_trunk - yaw`.
-* **Marker X/Y**: firmware source shows X = lateral position of the marker
-  (same axis as the track position) and Y = longitudinal (front/back row
-  amplitude ratio). Measured: `marker_axes_convention`.
-* `invert_position` / `invert_angle` flip the driver's output for a mirrored
-  mounting; with both false the driver reports exactly what §8 measured.
+* **Lateral position** (`Track.position_mm`): mm from the sensor centre, left negative / right positive.
+  Measured: moving the sensor toward printer +Y at yaw 0 makes the reported position more *positive*
+  (the tape then lies on the sensor's right), slope +1.001 mm/mm, residual 0.29 mm rms, noise 0.03 mm.
+  The reported value is linear over about ±58 mm; the left-reported track clamps at −59 mm and the
+  right-reported track at +58 mm (the manual quotes ±80 mm).
+* **Track angle** (`Track.angle_deg`): the manual's convention (incidence of the tape, ±90°). The bench's
+  yaw calibration could not be completed (the sensor slips on the fixture's yaw-motor coupling), so the
+  angle sign is reported as the manual states it and is *not* independently verified; `invert_angle` is
+  available for a mirrored mounting.
+* **Marker X/Y** (`Markers`): X is lateral (same axis and sign as the track position: reported X rises
+  with carriage +Y at +1.03 mm/mm), Y is longitudinal. Measured footprint of a 20 mm point marker at 20 mm
+  height: about ±20 mm lateral, ±10 mm longitudinal; the longitudinal estimate is compressed (~0.74 mm/mm)
+  and saturates near ±8 mm.
+* `invert_position` / `invert_angle` flip the driver's output for a mirrored mounting; with both false the
+  driver reports exactly what the bench measured.
 
 ## Development bench (WSL2)
 
