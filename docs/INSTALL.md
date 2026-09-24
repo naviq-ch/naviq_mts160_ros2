@@ -89,7 +89,7 @@ sudo apt install python3-colcon-common-extensions python3-rosdep can-utils
 sudo rosdep init 2>/dev/null; rosdep update
 
 mkdir -p ~/ros2_ws/src && cd ~/ros2_ws/src
-git clone https://github.com/naviq/naviq_mts160_ros2.git
+git clone https://github.com/naviq-ch/naviq_mts160_ros2.git
 cd ~/ros2_ws
 rosdep install --from-paths src --ignore-src -r -y     # rclpy, diagnostic_updater, python3-can, ...
 colcon build --symlink-install --packages-select naviq_msgs naviq_mts160

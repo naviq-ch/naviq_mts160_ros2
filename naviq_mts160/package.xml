@@ -6,6 +6,7 @@
   <description>ROS 2 driver for the Naviq MTS160 magnetic guide sensor (CANopen TPDOs via python-can).</description>
   <maintainer email="cosma@naviq.com">Naviq</maintainer>
   <license>Apache-2.0</license>
+  <url type="repository">https://github.com/naviq-ch/naviq_mts160_ros2</url>
 
   <depend>rclpy</depend>
   <depend>std_msgs</depend>

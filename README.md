@@ -28,7 +28,7 @@ python3 -m pip install --user --break-system-packages "python-can>=4.4"   # + gs
 
 # 2. build
 mkdir -p ~/ros2_ws/src && cd ~/ros2_ws/src
-git clone https://github.com/naviq/naviq_mts160_ros2.git
+git clone https://github.com/naviq-ch/naviq_mts160_ros2.git
 cd ~/ros2_ws && colcon build --symlink-install && source install/setup.bash
 
 # 3a. Linux robot with SocketCAN (kernel gs_usb / any CAN interface)
