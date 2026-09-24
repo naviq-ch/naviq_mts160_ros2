@@ -263,15 +263,19 @@ def _vcan_available():
 
 
 @pytest.mark.skipif(not _vcan_available(), reason="vcan0 not present (no SocketCAN in WSL2)")
-def test_replay_on_vcan0(rclpy_ctx, fixture_pairs, tmp_path):
+def test_replay_on_vcan0(rclpy_ctx, tmp_path):
+    """The node as a separate process on SocketCAN: a synthetic 3 s stream is replayed onto vcan0 with
+    its original timing (what canplayer would do) and the published tracks are compared with the decoder."""
+    import signal
     from rclpy.qos import qos_profile_sensor_data
     from rclpy.executors import SingleThreadedExecutor
+    from diagnostic_msgs.msg import DiagnosticArray
     from naviq_msgs.msg import TrackDetection
 
-    log, js = fixture_pairs[-1]
-    frames = fu.read_candump(log)
-    fx = fu.load_fixture(js)
-    node_id = int(fx.get("node_id", NODE))
+    node_id = NODE
+    session = fu.synthetic_session(node_id, seconds=3.0, lpos=-3, rpos=-3, lang=2, rang=2, strength=2,
+                                   markers=(120, -40, 0, 0), left_marker=True)
+    frames = [fu.LogFrame(t, cid, data) for t, cid, data in session]
     expected = [s.value for s in fu.decode_log(frames, node_id) if s.kind == "track"]
 
     # own process group: "ros2 run" does not forward SIGTERM to the node, so signal the whole group
@@ -282,20 +286,25 @@ def test_replay_on_vcan0(rclpy_ctx, fixture_pairs, tmp_path):
         stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, start_new_session=True)
     listener = rclpy_ctx.create_node("vcan_listener")
     got = []
-    listener.create_subscription(TrackDetection, "/replay_vcan/mts160/track", got.append, qos_profile_sensor_data)
+    diag = {}
+    sub = listener.create_subscription(TrackDetection, "/replay_vcan/mts160/track", got.append, qos_profile_sensor_data)
+
+    def on_diag(msg):
+        for st in msg.status:
+            diag[st.name] = (st.message, {kv.key: kv.value for kv in st.values})
+    listener.create_subscription(DiagnosticArray, "/diagnostics", on_diag, 10)
     ex = SingleThreadedExecutor()
     ex.add_node(listener)
     spin = threading.Thread(target=ex.spin, daemon=True)
     spin.start()
     try:
-        # wait until the driver process is up and its publisher is discovered (slow CI runners need > 2 s)
-        topic = "/replay_vcan/mts160/track"
+        # wait until the driver process is up and its publisher has MATCHED our subscription (slow CI runners)
         deadline = time.monotonic() + 30.0
-        while time.monotonic() < deadline and listener.count_publishers(topic) < 1:
+        while time.monotonic() < deadline and sub.get_publisher_count() < 1:
             assert proc.poll() is None, "driver process exited before publishing"
             time.sleep(0.1)
-        assert listener.count_publishers(topic) >= 1, "driver publisher on vcan0 not discovered"
-        time.sleep(0.5)                                   # let the subscription match before the burst
+        assert sub.get_publisher_count() >= 1, "driver publisher on vcan0 not matched"
+        time.sleep(0.5)
         # canplayer-equivalent: replay with original timing onto vcan0
         bus = can.Bus(interface="socketcan", channel="vcan0")
         try:
@@ -308,11 +317,11 @@ def test_replay_on_vcan0(rclpy_ctx, fixture_pairs, tmp_path):
                 bus.send(can.Message(arbitration_id=f.can_id, data=f.data, is_extended_id=False))
         finally:
             bus.shutdown()
-        deadline = time.monotonic() + 3.0
+        deadline = time.monotonic() + 5.0
         while time.monotonic() < deadline and len(got) < len(expected):
             time.sleep(0.05)
+        time.sleep(1.2)                                       # one more diagnostics period for the report below
     finally:
-        import signal
         os.killpg(os.getpgid(proc.pid), signal.SIGINT)          # graceful: rclpy handles it, node exits 0
         try:
             out, _ = proc.communicate(timeout=10)
@@ -321,6 +330,8 @@ def test_replay_on_vcan0(rclpy_ctx, fixture_pairs, tmp_path):
             out, _ = proc.communicate()
         ex.shutdown(timeout_sec=1.0)
         listener.destroy_node()
-    assert len(got) >= 0.98 * len(expected), out[-2000:]
+    report = f"driver diagnostics: {diag}" + chr(10) + f"driver output: {out[-2000:]}"
+    assert len(got) >= 0.98 * len(expected), f"{len(got)}/{len(expected)} tracks" + chr(10) + report
     m, e = got[0], expected[0]
     assert (m.left.position_mm, m.right.position_mm, m.strength) == (e.left_position_mm, e.right_position_mm, e.strength)
+    assert m.left_marker and not m.right_marker
