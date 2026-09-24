@@ -31,13 +31,18 @@ Contents
 The node reads the sensor's CANopen TPDOs directly (no CANopen stack) and
 publishes:
 
-| topic | type | rate (sensor default) |
+| topic | type | one message per |
 |---|---|---|
-| `/mts160/track` | `naviq_msgs/TrackDetection` | 100 Hz (TPDO1, 10 ms) |
-| `/mts160/markers` | `naviq_msgs/Markers` | 50 Hz (TPDO2, 20 ms) |
-| `/mts160/navicode` | `naviq_msgs/Navicode` | 20 Hz (TPDO3, 50 ms) |
+| `/mts160/track` | `naviq_msgs/TrackDetection` | TPDO1 frame |
+| `/mts160/markers` | `naviq_msgs/Markers` | TPDO2 frame |
+| `/mts160/navicode` | `naviq_msgs/Navicode` | TPDO3 frame |
 | `/mts160/raw` | `naviq_msgs/RawTpdo` | every frame, only with `publish_raw:=true` |
-| `/diagnostics` | `diagnostic_msgs/DiagnosticArray` | 1 Hz |
+| `/diagnostics` | `diagnostic_msgs/DiagnosticArray` | second |
+
+The topic rates are the sensor's TPDO periods, which you choose: in the
+sensor over USB (persistent) or through the driver's `tpdo1..3_period_ms`
+parameters (applied at startup). The sensor ships with 10 / 20 / 50 ms,
+i.e. 100 / 50 / 20 Hz; the examples below assume that.
 
 The only write the driver can make to the sensor is the `/mts160/zero`
 service (zero-level calibration, stored by the sensor in flash). It never
@@ -67,7 +72,7 @@ console; the driver does not do this. It expects:
 | bitrate | 500 kbit/s |
 | node ID | 10 (any 1..127 works, pass `node_id:=`) |
 | auto-run | on (the sensor enters NMT *operational* by itself and starts sending TPDOs) |
-| TPDO1 | on, 10 ms (track); TPDO2 20 ms (markers) and TPDO3 50 ms (navicode) as needed |
+| TPDOs | TPDO1 (track) on; TPDO2 (markers) and TPDO3 (navicode) as needed. Periods of your choice (factory 10 / 20 / 50 ms); the driver can also set them at startup with `tpdo1..3_period_ms` |
 | heartbeat | on (1000 ms); the driver reports ERROR when it is older than `heartbeat_timeout_s` |
 | termination | on if the sensor is at one end of the bus |
 | tape polarity | matching the tape you use (north or south up) |
@@ -125,9 +130,8 @@ ros2 launch naviq_mts160 driver.launch.py can_interface_type:=socketcan can_chan
 
 Launch arguments (all optional): `can_interface_type`, `can_channel`,
 `can_bitrate` (used only by backends that set it themselves), `node_id`,
-`frame_id`, `publish_raw`, `params_file`, `publish_static_tf` (an example
-`base_link → mts160_link` transform, set `false` on a real robot and publish
-your own), `namespace`.
+`frame_id`, `publish_raw`, `params_file`, `namespace`. The driver publishes
+no TF: publish the sensor's mounting transform from your robot description.
 
 For anything more, copy `naviq_mts160/config/example.yaml`, edit it and pass
 `params_file:=/path/to/mts160.yaml`. The node's parameters are listed in the
@@ -194,9 +198,10 @@ Step 1: is the sensor talking? Before starting ROS:
 candump can0
 ```
 
-You should see, with node ID 10, `18A` every 10 ms (5 bytes), `28A` every
-20 ms (8 bytes), `38A` every 50 ms (3 bytes) and `70A` once a second
-(1 byte, `05` = operational). Nothing at all: see 9.1.
+You should see, with node ID 10, `18A` (5 bytes), `28A` (8 bytes) and
+`38A` (3 bytes) at the TPDO periods configured in the sensor (every 10, 20
+and 50 ms as shipped), and `70A` once a second (1 byte, `05` =
+operational). Nothing at all: see 9.1.
 
 Step 2: start the driver and check the rates:
 
@@ -205,7 +210,7 @@ ros2 launch naviq_mts160 driver.launch.py can_interface_type:=socketcan can_chan
 ```
 
 ```bash
-ros2 topic hz /mts160/track          # ~100 Hz
+ros2 topic hz /mts160/track          # 1000 / TPDO1 period: ~100 Hz as shipped
 ros2 topic echo /mts160/track
 ```
 
@@ -270,7 +275,7 @@ Wants=sys-subsystem-net-devices-can0.device
 [Service]
 User=robot
 Environment=HOME=/home/robot
-ExecStart=/bin/bash -lc "source /opt/ros/jazzy/setup.bash && source /home/robot/ros2_ws/install/setup.bash && exec ros2 launch naviq_mts160 driver.launch.py can_interface_type:=socketcan can_channel:=can0 publish_static_tf:=false"
+ExecStart=/bin/bash -lc "source /opt/ros/jazzy/setup.bash && source /home/robot/ros2_ws/install/setup.bash && exec ros2 launch naviq_mts160 driver.launch.py can_interface_type:=socketcan can_channel:=can0"
 Restart=on-failure
 RestartSec=2
 

@@ -4,13 +4,11 @@
     ros2 launch naviq_mts160 driver.launch.py can_interface_type:=gs_usb can_channel:=0   # WSL2 bench
     ros2 launch naviq_mts160 driver.launch.py params_file:=/path/to/my.yaml
 
-An example static transform from base_link to the sensor is included
-(disable with publish_static_tf:=false); the driver itself publishes no TF.
+The driver publishes no TF; publish the sensor's mounting transform from your robot description.
 """
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
-from launch.conditions import IfCondition
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
@@ -28,7 +26,6 @@ def generate_launch_description():
         DeclareLaunchArgument("publish_raw", default_value="false"),
         DeclareLaunchArgument("params_file", default_value="",
                               description="optional YAML with further parameters (overrides the arguments above)"),
-        DeclareLaunchArgument("publish_static_tf", default_value="true"),
         DeclareLaunchArgument("namespace", default_value=""),
     ]
 
@@ -54,15 +51,4 @@ def generate_launch_description():
         parameters=params + [params_file],
     )
 
-    # Example only: sensor 0.30 m ahead of base_link, 0.02 m above the floor, facing down.
-    static_tf = Node(
-        package="tf2_ros",
-        executable="static_transform_publisher",
-        name="mts160_static_tf",
-        arguments=["--x", "0.30", "--y", "0.0", "--z", "0.02",
-                   "--roll", "0", "--pitch", "0", "--yaw", "0",
-                   "--frame-id", "base_link", "--child-frame-id", LaunchConfiguration("frame_id")],
-        condition=IfCondition(LaunchConfiguration("publish_static_tf")),
-    )
-
-    return LaunchDescription(args + [driver, static_tf])
+    return LaunchDescription(args + [driver])

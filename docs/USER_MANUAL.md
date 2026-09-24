@@ -63,7 +63,6 @@ Launch arguments:
 | `frame_id` | `mts160_link` | `header.frame_id` of every message |
 | `publish_raw` | `false` | also publish every raw frame on `~/raw` |
 | `params_file` | (none) | YAML applied on top of the arguments above |
-| `publish_static_tf` | `true` | start an example `base_link → mts160_link` static transform |
 | `namespace` | (none) | namespace for the node |
 
 Or run the executable directly:
@@ -109,9 +108,17 @@ All messages carry a `std_msgs/Header` whose `stamp` is the time the CAN
 frame was received on the host (see section 8) and whose `frame_id` is the
 `frame_id` parameter.
 
+**Rates.** Each topic carries one message per sensor frame, so its rate is
+the period of the corresponding TPDO. The periods are configurable: in the
+sensor over USB (Naviq utility or console, persistent) or by the driver at
+startup with `tpdo1_period_ms`, `tpdo2_period_ms`, `tpdo3_period_ms`
+(section 3; RAM only). The sensor ships with 10 / 20 / 50 ms, which gives
+100 / 50 / 20 Hz; the figures quoted in this manual assume those values.
+`/diagnostics` reports the rates actually received.
+
 ### 4.1 `~/track` — `naviq_msgs/TrackDetection`
 
-One message per TPDO1 frame, 100 Hz with the sensor's default 10 ms period.
+One message per TPDO1 frame (100 Hz at the factory 10 ms period).
 QoS: sensor data (best effort, keep last 5).
 
 ```
@@ -158,7 +165,7 @@ not as geometry.
 
 ### 4.2 `~/markers` — `naviq_msgs/Markers`
 
-One message per TPDO2 frame, 50 Hz by default. QoS: sensor data.
+One message per TPDO2 frame (50 Hz at the factory 20 ms period). QoS: sensor data.
 
 ```
 std_msgs/Header header
@@ -179,7 +186,7 @@ right marker at the same lateral position.
 
 ### 4.3 `~/navicode` — `naviq_msgs/Navicode`
 
-One message per TPDO3 frame, 20 Hz by default. QoS: reliable, keep last 10.
+One message per TPDO3 frame (20 Hz at the factory 50 ms period). QoS: reliable, keep last 10.
 
 ```
 std_msgs/Header header
@@ -268,15 +275,15 @@ respective fields of both tracks (and the marker X axis for
 `invert_position`) before publishing. Everything in this manual describes
 the values with both false.
 
-The driver publishes no TF. The launch file's optional static transform
-(`publish_static_tf`, default on) places `mts160_link` 0.30 m ahead of and
-0.02 m above `base_link` with no rotation, as an example only: on a real
-robot disable it and publish the true mounting transform yourself.
+The driver publishes no TF. Publish the sensor's mounting transform
+(`base_link → mts160_link`, or whatever `frame_id` you chose) from your
+robot description.
 
 ## 8. Timing, stamps and QoS
 
-* The sensor measures every 5 ms and sends TPDO1 every 10 ms, so consecutive
-  `~/track` messages are distinct samples.
+* The sensor measures every 5 ms; with a TPDO1 period of 10 ms or more
+  (factory 10 ms) consecutive `~/track` messages are distinct samples, and a
+  shorter period would repeat samples.
 * `header.stamp` is the host's wall-clock time when python-can handed the
   frame to the driver. It is not sensor time and it ignores `use_sim_time`.
   The driver adds well under a millisecond between receiving a frame and
@@ -368,7 +375,7 @@ replayed into the driver through `vcan0` with `canplayer` (INSTALL.md 7.2).
 
 ```bash
 ros2 launch naviq_mts160 driver.launch.py can_interface_type:=socketcan can_channel:=can0
-ros2 topic echo /mts160/track            # decoded values, 100 Hz
+ros2 topic echo /mts160/track            # decoded values, one per TPDO1 frame
 ros2 topic hz /mts160/track
 ros2 topic echo /mts160/markers
 ros2 topic echo /mts160/navicode

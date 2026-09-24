@@ -80,9 +80,6 @@ reference in flash itself — see `application/src/sensing.c` in the firmware �
 so it persists). The sensor's self-test (SDO `0x2001`) is deliberately not
 exposed: run it from the Naviq utility or the serial console when needed.
 
-**TF**: the driver publishes nothing; `driver.launch.py` starts an example
-static transform `base_link → mts160_link` (`publish_static_tf:=false` to disable).
-
 **Extra**: `ros2 run naviq_mts160 mts160_line_follower` — a minimal
 proportional `/cmd_vel` follower on `~/track` (example only).
 
