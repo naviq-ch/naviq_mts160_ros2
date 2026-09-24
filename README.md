@@ -181,4 +181,5 @@ colcon test-result --verbose
 * `test_launch.py` (`launch_testing`): the node starts from the launch file,
   invalid parameters are rejected, `/diagnostics` goes ERROR→OK when frames
   arrive (cross-process `udp_multicast` backend, needs `python3-msgpack`).
-* CI: `.github/workflows/ci.yml` (`ros-tooling/setup-ros` + `action-ros-ci`, Jazzy).
+* CI: `.github/workflows/ci.yml` (`action-ros-ci` in the `rostooling/setup-ros-docker` Jazzy image; the
+  vcan0 replay case is skipped there and runs on a Linux host with `vcan0`).

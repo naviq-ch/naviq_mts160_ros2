@@ -9,23 +9,17 @@ jobs:
   colcon:
     name: ROS 2 Jazzy build and test
     runs-on: ubuntu-24.04
+    # Prebuilt image with ROS 2 Jazzy (ros-base), colcon, rosdep and vcs: installing ROS from apt on
+    # every run proved unreliable on the hosted runners. The SocketCAN replay test needs a vcan0
+    # interface, which a container cannot create; it is skipped here and runs on a Linux host with vcan0.
+    container:
+      image: rostooling/setup-ros-docker:ubuntu-noble-ros-jazzy-ros-base-latest
     steps:
-      - name: Set up vcan0 (SocketCAN replay test)
-        continue-on-error: true
-        run: |
-          sudo apt-get update -q
-          sudo apt-get install -y -q linux-modules-extra-$(uname -r) can-utils || true
-          sudo modprobe vcan && sudo ip link add dev vcan0 type vcan && sudo ip link set up vcan0
-          ip -details link show vcan0
-
-      - uses: ros-tooling/setup-ros@v0.7
-        with:
-          required-ros-distributions: jazzy
-
       - name: Python dependencies
         run: |
-          sudo apt-get install -y -q python3-pip python3-msgpack
-          python3 -m pip install --break-system-packages "python-can>=4.4" gs_usb pytest-timeout
+          sudo apt-get update -q
+          sudo apt-get install -y -q python3-pip python3-msgpack python3-pytest-timeout can-utils
+          python3 -m pip install --break-system-packages "python-can>=4.4" gs_usb
 
       - uses: ros-tooling/action-ros-ci@v0.3
         with:
