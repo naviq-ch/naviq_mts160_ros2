@@ -25,7 +25,7 @@ jobs:
       - name: Python dependencies
         run: |
           sudo apt-get install -y -q python3-pip python3-msgpack
-          python3 -m pip install --break-system-packages "python-can>=4.4" gs_usb
+          python3 -m pip install --break-system-packages "python-can>=4.4" gs_usb pytest-timeout
 
       - uses: ros-tooling/action-ros-ci@v0.3
         with:
