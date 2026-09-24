@@ -126,6 +126,8 @@ def test_driver_publishes_recorded_frames(rclpy_ctx, fixture_pairs):
 
     # best-effort like the driver, but deep enough for a 20x-speed burst (the default sensor-data depth is 5)
     deep = QoSProfile(reliability=ReliabilityPolicy.BEST_EFFORT, history=HistoryPolicy.KEEP_LAST, depth=5000)
+    # navicode is reliable; a deep reader history so a slow CI runner cannot overflow it during the burst
+    deep_reliable = QoSProfile(reliability=ReliabilityPolicy.RELIABLE, history=HistoryPolicy.KEEP_LAST, depth=5000)
 
     for log, js in fixture_pairs:
         frames = fu.read_candump(log)
@@ -148,7 +150,7 @@ def test_driver_publishes_recorded_frames(rclpy_ctx, fixture_pairs):
         got = {"track": [], "markers": [], "navicode": [], "raw": []}
         listener.create_subscription(TrackDetection, f"{ns}/mts160/track", lambda m: got["track"].append(m), deep)
         listener.create_subscription(Markers, f"{ns}/mts160/markers", lambda m: got["markers"].append(m), deep)
-        listener.create_subscription(Navicode, f"{ns}/mts160/navicode", lambda m: got["navicode"].append(m), 10)
+        listener.create_subscription(Navicode, f"{ns}/mts160/navicode", lambda m: got["navicode"].append(m), deep_reliable)
         from naviq_msgs.msg import RawTpdo
         listener.create_subscription(RawTpdo, f"{ns}/mts160/raw", lambda m: got["raw"].append(m), deep)
 
