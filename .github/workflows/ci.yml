@@ -44,16 +44,16 @@ jobs:
           path: ros_ws/log
           if-no-files-found: ignore
 
-  tools-lint:
-    name: Lint fixture tooling
+  lint:
+    name: Lint and no-ROS unit tests
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python -m pip install flake8 numpy pyyaml pyserial "python-can>=4.4" pytest
-      - run: flake8 naviq_mts160/naviq_mts160 naviq_mts160/test tools/naviq_mts160_fixture
+      - run: python -m pip install flake8 "python-can>=4.4" pytest
+      - run: flake8 naviq_mts160/naviq_mts160 naviq_mts160/test tools
       - name: Decoder unit tests without ROS
         run: |
           cd naviq_mts160

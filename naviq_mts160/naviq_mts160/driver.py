@@ -1,8 +1,8 @@
 """ROS 2 driver node for the Naviq MTS160 magnetic guide sensor.
 
 Node name ``mts160``.  Reads TPDO1..3 and the heartbeat from the sensor's
-CANopen node over python-can (``socketcan`` on a Linux robot, ``gs_usb`` on
-the WSL2 bench), publishes ``~/track``, ``~/markers``, ``~/navicode`` and
+CANopen node over python-can (``socketcan`` on a Linux robot, ``gs_usb`` where
+there is no SocketCAN, e.g. WSL2), publishes ``~/track``, ``~/markers``, ``~/navicode`` and
 optionally ``~/raw``, offers the ``~/zero`` service and reports on
 ``/diagnostics``.
 

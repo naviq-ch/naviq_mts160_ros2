@@ -329,10 +329,11 @@ ros2 launch naviq_mts160 driver.launch.py can_interface_type:=gs_usb can_channel
 ```
 
 `can_channel` is the device index, `bus:address` or the adapter's serial
-number. On WSL2 the adapter is attached with `usbipd-win`; the full bench
-procedure is in `tools/bench_setup.md`. The driver contains a workaround for
-the `gs_usb` package leaving the device unconfigured after its USB reset;
-if the bus stays silent, unplug and re-plug the adapter once.
+number. On WSL2 the adapter is attached to the distribution with
+`usbipd-win` (`usbipd bind` once as Administrator, then `usbipd attach --wsl
+--busid <id>`). The driver contains a workaround for the `gs_usb` package
+leaving the device unconfigured after its USB reset; if the bus stays silent,
+unplug and re-plug the adapter once.
 
 **9.6 Rebuilding after a message change.** `naviq_msgs` is generated code:
 after pulling a change to `msg/` or `srv/`, rebuild both packages

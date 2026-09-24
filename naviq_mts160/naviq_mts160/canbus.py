@@ -6,7 +6,7 @@ python-can names them (``socketcan``, ``gs_usb``, ``virtual``, ...).
 * ``socketcan`` (default): ``channel`` is the interface name (``can0``);
   the bitrate is configured by the OS and ignored here.
 * ``gs_usb``: user-space candleLight/CANable driver over libusb (the WSL2
-  bench).  ``channel`` may be a device index (``"0"``), a USB ``bus:address``
+  host without SocketCAN, e.g. WSL2).  ``channel`` may be a device index (``"0"``), a USB ``bus:address``
   pair (``"1:4"``) or a device serial number; the bitrate is set here.
 * ``virtual``: in-process bus used by the tests.
 """
@@ -86,7 +86,7 @@ def _patch_gs_usb_start() -> None:
     usbip into WSL2) the device comes back from that reset *unconfigured*:
     control transfers and the CAN peripheral work (the sensor's frames are
     acknowledged) but the bulk endpoints are not enabled, so no frame ever
-    reaches the host.  Measured on the bench 2026-09-23 (candleLight sw 2 /
+    reaches the host.  Measured 2026-09-23 (candleLight sw 2 /
     hw 1, CANable-MKS).  The Linux kernel driver never resets the device.
     This replacement re-selects the configuration, claims interface 0,
     clears the endpoint halts and sends HOST_FORMAT before starting.

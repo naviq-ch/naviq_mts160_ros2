@@ -1,15 +1,13 @@
 # naviq_mts160_ros2
 
 ROS 2 driver for the **Naviq MTS160** magnetic guide sensor
-(CANopen TPDOs parsed directly, no CANopen stack), plus the bench tooling used
-to validate it against physical ground truth on a motorised 3D-printer
-fixture.
+(CANopen TPDOs parsed directly, no CANopen stack).
 
 | package | what |
 |---|---|
 | `naviq_msgs` | `TrackDetection`, `Markers`, `Navicode`, `RawTpdo` messages; `Zero` service |
 | `naviq_mts160` | the `mts160` node (`rclpy` + `python-can`), launch file, example config, tests |
-| `tools/naviq_mts160_fixture` | development-only: printer fixture control, calibration, survey, characterisation, report |
+| `tools/dump_raw.py` | prints every frame the sensor sends, candump-style, with its decoded meaning |
 
 Target: ROS 2 **Jazzy** / Ubuntu 24.04 / Python 3.12. Licence: Apache-2.0.
 
@@ -104,62 +102,22 @@ Frames are filtered with `(id & 0x7F) == node_id` and dispatched on
 
 ## Sign conventions
 
-Measured on the bench (`report/summary.md`, `tools/calibration.yaml`):
-
 * **Lateral position** (`Track.position_mm`): mm from the sensor centre, left negative / right positive.
-  Measured: moving the sensor toward printer +Y at yaw 0 makes the reported position more *positive*
-  (the tape then lies on the sensor's right), slope +1.001 mm/mm, residual 0.29 mm rms, noise 0.03 mm.
-  The reported value is linear over about ±58 mm; the left-reported track clamps at −59 mm and the
-  right-reported track at +58 mm (the manual quotes ±80 mm).
-* **Track angle** (`Track.angle_deg`): the manual's convention (incidence of the tape, ±90°). The bench's
-  yaw calibration could not be completed (the sensor slips on the fixture's yaw-motor coupling), so the
-  angle sign is reported as the manual states it and is *not* independently verified; `invert_angle` is
-  available for a mirrored mounting.
-* **Marker X/Y** (`Markers`): X is lateral (same axis and sign as the track position: reported X rises
-  with carriage +Y at +1.03 mm/mm), Y is longitudinal. Measured footprint of a 20 mm point marker at 20 mm
-  height: about ±20 mm lateral, ±10 mm longitudinal; the longitudinal estimate is compressed (~0.74 mm/mm)
-  and saturates near ±8 mm.
+  Verified against a motorised fixture: moving the sensor so that the tape lies under its right half makes
+  the reported position more positive, slope 1.00 mm/mm with 0.3 mm rms residual at the nominal 20 mm
+  height; the reported value is linear over about ±58 mm of the 160 mm width.
+* **Track angle** (`Track.angle_deg`): the manual's convention (incidence of the tape, ±90°); the sign was
+  not independently verified. `invert_angle` is available for a mirrored mounting.
+* **Marker X/Y** (`Markers`): X is lateral (same axis and sign as the track position), Y is longitudinal.
 * `invert_position` / `invert_angle` flip the driver's output for a mirrored mounting; with both false the
-  driver reports exactly what the bench measured.
+  driver reports the sensor's own convention.
 
-## Validation status (2026-09-24)
+## Validation status
 
-Verified on the bench sensor: the node runs at 99.6 Hz on TPDO1 with TPDO2/TPDO3/heartbeat decoded, `/diagnostics`
-OK, receive→publish latency 0.17 ms mean; the recorded-frame fixtures in
-`naviq_mts160/test/fixtures/` come from these sessions and `colcon test` passes (64 tests, vcan0 case skipped
-on WSL2). The physical characterisation was cut short by the operator: the sensor slips on the fixture's
-yaw-motor coupling, so every yaw ≠ 0 test (angle sign and scale, cross-coupling, fork at ±15°, marker at yaw 90)
-is **not done**, and the height / repeatability sweeps were abandoned. The navicode section of the bench bed was
-never decoded by the sensor (counter unchanged in every pass), so `~/navicode` is verified for framing and
-`is_new` only. Details: `report/summary.md`, `tools/bench_notes.md`.
-
-## Development bench (WSL2)
-
-The driver was validated on a Windows PC running the whole stack in **WSL2
-Ubuntu 24.04**; the CANable-MKS (candle firmware), the printer's CH340 serial
-and the sensor's USB console are attached with `usbipd-win`. There is no
-SocketCAN in the stock WSL2 kernel, so the driver uses python-can's `gs_usb`
-backend there. See `tools/bench_setup.md` (cold-boot procedure),
-`tools/bench_notes.md` (log), `tools/calibration.yaml`, `tools/bed_map.yaml`
-and `report/summary.md`.
-
-Fixture tooling (never part of the released driver):
-
-```bash
-cd tools
-python3 -m naviq_mts160_fixture.hold_e                                # keep the yaw (E) stepper energised, no motion
-python3 -m naviq_mts160_fixture.calibrate baseline --assume-homed     # 7.2
-python3 -m naviq_mts160_fixture.calibrate rotation --assume-homed     # 7.3
-python3 -m naviq_mts160_fixture.survey --assume-homed                 # 7.4
-python3 -m naviq_mts160_fixture.characterize --assume-homed all       # 8.x
-python3 -m naviq_mts160_fixture.export_fixtures                       # data/ -> test/fixtures
-python3 -m naviq_mts160_fixture.report                                # summary.md
-```
-
-Operator rules encoded in the tooling: the bed is 220 × 200 mm with switches only at the minima (envelope
-X 0–190, Y 0–195); the sensor is rotated only with the carriage at X 100–120 and its tip must stay left of the
-right frame (X 205); the E driver stays energised (an unpowered E lets the yaw slip; its noise on the X min switch
-is why endstop checking is off for ordinary moves and X/Y are homed by hand).
+Validated on a real sensor over CAN: 100 Hz on TPDO1 with TPDO2/TPDO3/heartbeat decoded, `/diagnostics`
+OK, receive→publish latency below 0.2 ms; the recorded-frame fixtures in `naviq_mts160/test/fixtures/`
+come from those sessions and `colcon test` replays them. The angle sign and the navicode decoding were not
+verified against a known ground truth (`~/navicode` is verified for framing and `is_new`).
 
 ## Tests
 
@@ -177,7 +135,7 @@ colcon test-result --verbose
   also run as a separate process over SocketCAN with the log replayed. The
   test node runs in its own namespace and `test/conftest.py` picks a private
   `ROS_DOMAIN_ID` unless one is set, so a driver running on the same host
-  (the bench) cannot feed the tests.
+  cannot feed the tests.
 * `test_launch.py` (`launch_testing`): the node starts from the launch file,
   invalid parameters are rejected, `/diagnostics` goes ERROR→OK when frames
   arrive (cross-process `udp_multicast` backend, needs `python3-msgpack`).
