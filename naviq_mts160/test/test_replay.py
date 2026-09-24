@@ -274,11 +274,12 @@ def test_replay_on_vcan0(rclpy_ctx, fixture_pairs, tmp_path):
     node_id = int(fx.get("node_id", NODE))
     expected = [s.value for s in fu.decode_log(frames, node_id) if s.kind == "track"]
 
+    # own process group: "ros2 run" does not forward SIGTERM to the node, so signal the whole group
     proc = subprocess.Popen(
         ["ros2", "run", "naviq_mts160", "mts160", "--ros-args",
          "-r", "__ns:=/replay_vcan",
          "-p", "can_interface_type:=socketcan", "-p", "can_channel:=vcan0", "-p", f"node_id:={node_id}"],
-        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, start_new_session=True)
     listener = rclpy_ctx.create_node("vcan_listener")
     got = []
     listener.create_subscription(TrackDetection, "/replay_vcan/mts160/track", got.append, qos_profile_sensor_data)
@@ -304,11 +305,12 @@ def test_replay_on_vcan0(rclpy_ctx, fixture_pairs, tmp_path):
         while time.monotonic() < deadline and len(got) < len(expected):
             time.sleep(0.05)
     finally:
-        proc.terminate()
+        import signal
+        os.killpg(os.getpgid(proc.pid), signal.SIGINT)          # graceful: rclpy handles it, node exits 0
         try:
-            out, _ = proc.communicate(timeout=5)
+            out, _ = proc.communicate(timeout=10)
         except subprocess.TimeoutExpired:
-            proc.kill()
+            os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
             out, _ = proc.communicate()
         ex.shutdown(timeout_sec=1.0)
         listener.destroy_node()

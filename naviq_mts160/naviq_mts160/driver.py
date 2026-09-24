@@ -152,6 +152,8 @@ class Mts160Driver(Node):
 
     # ------------------------------------------------------------ bus state
     def _on_bus_state(self, connected: bool, message: str) -> None:
+        if self._closing:
+            return                              # our own stop during shutdown; the logging context may be gone
         if connected:
             self.get_logger().info(f"CAN bus connected ({message})")
             if any(v > 0 for v in self.tpdo_periods.values()):
@@ -315,13 +317,14 @@ class Mts160Driver(Node):
 
 
 def main(args=None):
+    from rclpy.executors import ExternalShutdownException
     rclpy.init(args=args)
     node = None
     try:
         node = Mts160Driver()
         rclpy.spin(node)
-    except KeyboardInterrupt:
-        pass
+    except (KeyboardInterrupt, ExternalShutdownException):
+        pass                                    # Ctrl-C / SIGTERM (systemctl stop): clean exit, code 0
     finally:
         if node is not None:
             node.destroy_node()
