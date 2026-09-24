@@ -7,13 +7,15 @@ fixture.
 
 | package | what |
 |---|---|
-| `naviq_msgs` | `TrackDetection`, `Markers`, `Navicode`, `RawTpdo` messages; `SelfTest`, `Zero` services |
+| `naviq_msgs` | `TrackDetection`, `Markers`, `Navicode`, `RawTpdo` messages; `Zero` service |
 | `naviq_mts160` | the `mts160` node (`rclpy` + `python-can`), launch file, example config, tests |
 | `tools/naviq_mts160_fixture` | development-only: printer fixture control, calibration, survey, characterisation, report |
 
 Target: ROS 2 **Jazzy** / Ubuntu 24.04 / Python 3.12. Licence: Apache-2.0.
 
 ## Five-minute quickstart
+
+The full installation and test manual is [docs/INSTALL.md](docs/INSTALL.md).
 
 Prerequisites: a Jazzy install, the sensor on a CAN bus at 500 kbit/s with
 node ID 10, auto-run enabled and TPDO1 enabled (factory tool or serial
@@ -39,7 +41,6 @@ ros2 launch naviq_mts160 driver.launch.py can_interface_type:=gs_usb can_channel
 # 4. look
 ros2 topic echo /mts160/track
 ros2 topic echo /diagnostics
-ros2 service call /mts160/self_test naviq_msgs/srv/SelfTest
 ```
 
 ## Node `mts160`
@@ -72,11 +73,12 @@ polarity or thresholds, and never sends `!SAVE`.
 | `~/markers` | `naviq_msgs/Markers` | TPDO2 `0x280+id`: marker X/Y in 0.1 mm, detected flags copied from the latest TPDO1 |
 | `~/navicode` | `naviq_msgs/Navicode` | TPDO3 `0x380+id`: code, counter, `is_new` on counter change |
 | `~/raw` | `naviq_msgs/RawTpdo` | every frame from the node (optional) |
-| `/diagnostics` | `diagnostic_msgs/DiagnosticArray` | bus state, heartbeat/NMT state, TPDO rates, data timeout, frame-length errors, last self-test, receive→publish latency |
+| `/diagnostics` | `diagnostic_msgs/DiagnosticArray` | bus state, heartbeat/NMT state, TPDO rates, data timeout, frame-length errors, SDO errors, receive→publish latency |
 
-**Services**: `~/self_test` (SDO write `0x2001`, wait 50 ms, read `0x2003:1..3`),
-`~/zero` (SDO write `0x2000`; the firmware stores the zero reference in flash
-itself — see `application/src/sensing.c` in the firmware — so it persists).
+**Service**: `~/zero` (SDO write `0x2000`; the firmware stores the zero
+reference in flash itself — see `application/src/sensing.c` in the firmware —
+so it persists). The sensor's self-test (SDO `0x2001`) is deliberately not
+exposed: run it from the Naviq utility or the serial console when needed.
 
 **TF**: the driver publishes nothing; `driver.launch.py` starts an example
 static transform `base_link → mts160_link` (`publish_static_tf:=false` to disable).
@@ -126,7 +128,7 @@ Measured on the bench (spec §8, `report/summary.md`, `tools/calibration.yaml`):
 ## Validation status (2026-09-24)
 
 Verified on the bench sensor: the node runs at 99.6 Hz on TPDO1 with TPDO2/TPDO3/heartbeat decoded, `/diagnostics`
-OK, SDO self-test 13/13, receive→publish latency 0.17 ms mean; the recorded-frame fixtures in
+OK, receive→publish latency 0.17 ms mean; the recorded-frame fixtures in
 `naviq_mts160/test/fixtures/` come from these sessions and `colcon test` passes (64 tests, vcan0 case skipped
 on WSL2). The physical characterisation was cut short by the operator: the sensor slips on the fixture's
 yaw-motor coupling, so every yaw ≠ 0 test (angle sign and scale, cross-coupling, fork at ±15°, marker at yaw 90)

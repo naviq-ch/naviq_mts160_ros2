@@ -3,7 +3,7 @@
 The driver keeps a :class:`Stats` object that the CAN reader thread updates;
 the tasks here read it from the executor thread once per second and produce
 ``/diagnostics`` entries: bus state, heartbeat/NMT state, per-TPDO rates,
-data timeout, frame-length errors, last self-test and receive-to-publish
+data timeout, frame-length errors, SDO errors and receive-to-publish
 latency.
 """
 
@@ -14,7 +14,7 @@ import statistics
 import threading
 import time
 from dataclasses import dataclass, field
-from typing import Deque, Dict, Optional, Tuple
+from typing import Deque, Dict, Optional
 
 from diagnostic_msgs.msg import DiagnosticStatus
 import diagnostic_updater
@@ -37,7 +37,6 @@ class Stats:
     unknown_frame_count: int = 0
     other_node_count: int = 0
     sdo_response_count: int = 0
-    selftest: Optional[Tuple[bool, int, int, float]] = None   # passed, min, max, wall time
     sdo_errors: int = 0
     last_sdo_error: str = ""
     latency_s: Deque[float] = field(default_factory=lambda: collections.deque(maxlen=2000))
@@ -62,7 +61,7 @@ class Mts160Diagnostics:
         self.updater.add("Heartbeat", self._heartbeat_task)
         self.updater.add("Sensor data", self._data_task)
         self.updater.add("Frame errors", self._frame_errors_task)
-        self.updater.add("Self-test", self._selftest_task)
+        self.updater.add("SDO", self._sdo_task)
         self.updater.add("Latency", self._latency_task)
 
     # ------------------------------------------------------------------ tasks
@@ -162,23 +161,17 @@ class Mts160Diagnostics:
         stat.add("other_node_frames_total", str(other))
         return stat
 
-    def _selftest_task(self, stat):
+    def _sdo_task(self, stat):
         s = self._stats
         with s.lock:
-            st = s.selftest
             errs = s.sdo_errors
             last_err = s.last_sdo_error
-        if st is None:
-            stat.summary(DiagnosticStatus.OK, "not run since driver start")
+            responses = s.sdo_response_count
+        if errs:
+            stat.summary(DiagnosticStatus.WARN, f"{errs} SDO error(s): {last_err}")
         else:
-            passed, mn, mx, t = st
-            if passed:
-                stat.summary(DiagnosticStatus.OK, f"passed (min {mn} uT, max {mx} uT)")
-            else:
-                stat.summary(DiagnosticStatus.ERROR, f"FAILED (min {mn} uT, max {mx} uT)")
-            stat.add("min_delta_ut", str(mn))
-            stat.add("max_delta_ut", str(mx))
-            stat.add("age_s", f"{time.time() - t:.0f}")
+            stat.summary(DiagnosticStatus.OK, "no SDO errors")
+        stat.add("sdo_responses_total", str(responses))
         stat.add("sdo_errors", str(errs))
         stat.add("last_sdo_error", last_err)
         return stat

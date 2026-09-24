@@ -3,8 +3,8 @@
 Node name ``mts160``.  Reads TPDO1..3 and the heartbeat from the sensor's
 CANopen node over python-can (``socketcan`` on a Linux robot, ``gs_usb`` on
 the WSL2 bench), publishes ``~/track``, ``~/markers``, ``~/navicode`` and
-optionally ``~/raw``, offers ``~/self_test`` and ``~/zero`` services and
-reports on ``/diagnostics``.
+optionally ``~/raw``, offers the ``~/zero`` service and reports on
+``/diagnostics``.
 
 The CAN reader runs in its own thread (see :mod:`naviq_mts160.canbus`);
 messages are published from that thread with receive-time stamps.
@@ -24,7 +24,7 @@ from rclpy.time import Time
 from rcl_interfaces.msg import IntegerRange, ParameterDescriptor
 
 from naviq_msgs.msg import Markers, Navicode, RawTpdo, Track, TrackDetection
-from naviq_msgs.srv import SelfTest, Zero
+from naviq_msgs.srv import Zero
 
 from . import decoder, sdo
 from .canbus import CanBus, CanBusError, Frame
@@ -116,8 +116,6 @@ class Mts160Driver(Node):
 
         # -------------------------------------------------------- services
         self._srv_group = MutuallyExclusiveCallbackGroup()
-        self.srv_self_test = self.create_service(SelfTest, "~/self_test", self._handle_self_test,
-                                                 callback_group=self._srv_group)
         self.srv_zero = self.create_service(Zero, "~/zero", self._handle_zero,
                                             callback_group=self._srv_group)
 
@@ -295,23 +293,6 @@ class Mts160Driver(Node):
             self.stats.tpdo_counts[3] += 1
 
     # ------------------------------------------------------------- services
-    def _handle_self_test(self, request, response):
-        try:
-            passed, mn, mx = self.sdo.run_selftest(settle_s=0.05)
-        except (sdo.SdoError, CanBusError) as exc:
-            self._record_sdo_error(f"self-test failed: {exc}")
-            response.passed = False
-            response.min_delta_ut = 0
-            response.max_delta_ut = 0
-            return response
-        response.passed = bool(passed)
-        response.min_delta_ut = int(mn)
-        response.max_delta_ut = int(mx)
-        with self.stats.lock:
-            self.stats.selftest = (bool(passed), int(mn), int(mx), time.time())
-        self.get_logger().info(f"self-test {'PASSED' if passed else 'FAILED'}: min {mn} uT, max {mx} uT")
-        return response
-
     def _handle_zero(self, request, response):
         try:
             self.sdo.start_zero()

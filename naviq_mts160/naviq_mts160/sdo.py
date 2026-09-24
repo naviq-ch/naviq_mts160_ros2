@@ -58,13 +58,9 @@ OD_TPDO1_EVENT_TIMER = (0x1800, 5)
 OD_TPDO2_EVENT_TIMER = (0x1801, 5)
 OD_TPDO3_EVENT_TIMER = (0x1802, 5)
 OD_ZERO = (0x2000, 0)
-OD_SELFTEST = (0x2001, 0)
 OD_TAPE_POLARITY = (0x2002, 1)
 OD_TAPE_THRESHOLD = (0x2002, 2)
 OD_MARKER_THRESHOLD = (0x2002, 3)
-OD_SELFTEST_RESULT = (0x2003, 1)
-OD_SELFTEST_MIN_DELTA = (0x2003, 2)
-OD_SELFTEST_MAX_DELTA = (0x2003, 3)
 
 
 class SdoError(Exception):
@@ -289,23 +285,6 @@ class SdoClient:
     def start_zero(self) -> None:
         """SDO 0x2000: start zero-level calibration (firmware saves it to flash)."""
         self.write_u8(*OD_ZERO, 1)
-
-    def start_selftest(self) -> None:
-        """SDO 0x2001: start the internal self-test (takes ~30 ms)."""
-        self.write_u8(*OD_SELFTEST, 1)
-
-    def read_selftest(self):
-        """Read 0x2003:1..3 -> (passed, min_delta_ut, max_delta_ut)."""
-        result = self.read_u8(*OD_SELFTEST_RESULT)
-        min_delta = self.read_u16(*OD_SELFTEST_MIN_DELTA)
-        max_delta = self.read_u16(*OD_SELFTEST_MAX_DELTA)
-        return (result == 1, min_delta, max_delta)
-
-    def run_selftest(self, settle_s: float = 0.05):
-        """Start a self-test, wait, read the result registers."""
-        self.start_selftest()
-        time.sleep(settle_s)
-        return self.read_selftest()
 
     def set_tpdo_period(self, tpdo: int, period_ms: int) -> None:
         """Write event timer of TPDO 1..3 (0x1800+n-1 sub 5). 0 disables the TPDO."""

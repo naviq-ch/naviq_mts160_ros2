@@ -11,7 +11,6 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/Markers.msg"
   "msg/Navicode.msg"
   "msg/RawTpdo.msg"
-  "srv/SelfTest.srv"
   "srv/Zero.srv"
   DEPENDENCIES std_msgs
 )

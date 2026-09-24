@@ -123,27 +123,23 @@ class FakeBus:
         threading.Thread(target=go, daemon=True).start()
 
 
-def test_client_reads_selftest_registers():
+def test_client_reads_registers():
     bus = FakeBus(delay_s=0.005)
     c = sdo.SdoClient(bus, 10, timeout_s=0.5)
     assert c.read_u8(0x2003, 1) == 1
     assert c.read_u16(0x2003, 2) == 420
     assert c.read_u16(0x2003, 3) == 1234
-    assert c.read_selftest() == (True, 420, 1234)
     assert c.get_tpdo_period(1) == 10
-    assert c.transactions == 7 and c.timeouts == 0
+    assert c.transactions == 4 and c.timeouts == 0
 
 
 def test_client_writes_and_helpers():
     bus = FakeBus()
     c = sdo.SdoClient(bus, 10, timeout_s=0.5)
     c.start_zero()
-    c.start_selftest()
     c.set_tpdo_period(1, 5)
-    assert bus.writes == [(0x2000, 0, b"\x01"), (0x2001, 0, b"\x01"), (0x1800, 5, struct.pack("<H", 5))]
+    assert bus.writes == [(0x2000, 0, b"\x01"), (0x1800, 5, struct.pack("<H", 5))]
     assert c.get_tpdo_period(1) == 5
-    passed, mn, mx = c.run_selftest(settle_s=0.001)
-    assert passed and (mn, mx) == (420, 1234)
     with pytest.raises(ValueError):
         c.set_tpdo_period(4, 10)
     with pytest.raises(ValueError):
