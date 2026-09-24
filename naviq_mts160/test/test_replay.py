@@ -288,7 +288,14 @@ def test_replay_on_vcan0(rclpy_ctx, fixture_pairs, tmp_path):
     spin = threading.Thread(target=ex.spin, daemon=True)
     spin.start()
     try:
-        time.sleep(2.0)
+        # wait until the driver process is up and its publisher is discovered (slow CI runners need > 2 s)
+        topic = "/replay_vcan/mts160/track"
+        deadline = time.monotonic() + 30.0
+        while time.monotonic() < deadline and listener.count_publishers(topic) < 1:
+            assert proc.poll() is None, "driver process exited before publishing"
+            time.sleep(0.1)
+        assert listener.count_publishers(topic) >= 1, "driver publisher on vcan0 not discovered"
+        time.sleep(0.5)                                   # let the subscription match before the burst
         # canplayer-equivalent: replay with original timing onto vcan0
         bus = can.Bus(interface="socketcan", channel="vcan0")
         try:
