@@ -84,6 +84,11 @@ static transform `base_link → mts160_link` (`publish_static_tf:=false` to disa
 **Extra**: `ros2 run naviq_mts160 mts160_line_follower` — a minimal
 proportional `/cmd_vel` follower on `~/track` (example only).
 
+**Seeing what the sensor sends**: with the driver running (`publish_raw:=true`),
+`ros2 topic echo /mts160/track` shows the decoded values and
+`python3 tools/dump_raw.py` prints every CAN frame candump-style with its
+decoded meaning on the same line.
+
 ## Frame layouts (from the manual, verified against the firmware)
 
 ```
