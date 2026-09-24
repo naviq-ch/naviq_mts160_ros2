@@ -137,7 +137,8 @@ def test_driver_publishes_recorded_frames(rclpy_ctx, fixture_pairs):
         exp_navi = [s.value for s in expected if s.kind == "navicode"]
 
         chan = "replay-" + uuid.uuid4().hex[:8]
-        driver = Mts160Driver(parameter_overrides=[
+        ns = "/replay_" + uuid.uuid4().hex[:6]        # own namespace (~/track -> <ns>/mts160/track): a live driver on the host must not feed the listener
+        driver = Mts160Driver(namespace=ns, parameter_overrides=[
             Parameter("can_interface_type", value="virtual"),
             Parameter("can_channel", value=chan),
             Parameter("node_id", value=node_id),
@@ -145,11 +146,11 @@ def test_driver_publishes_recorded_frames(rclpy_ctx, fixture_pairs):
         ])
         listener = rclpy.create_node("replay_listener_" + uuid.uuid4().hex[:6])
         got = {"track": [], "markers": [], "navicode": [], "raw": []}
-        listener.create_subscription(TrackDetection, "/mts160/track", lambda m: got["track"].append(m), deep)
-        listener.create_subscription(Markers, "/mts160/markers", lambda m: got["markers"].append(m), deep)
-        listener.create_subscription(Navicode, "/mts160/navicode", lambda m: got["navicode"].append(m), 10)
+        listener.create_subscription(TrackDetection, f"{ns}/mts160/track", lambda m: got["track"].append(m), deep)
+        listener.create_subscription(Markers, f"{ns}/mts160/markers", lambda m: got["markers"].append(m), deep)
+        listener.create_subscription(Navicode, f"{ns}/mts160/navicode", lambda m: got["navicode"].append(m), 10)
         from naviq_msgs.msg import RawTpdo
-        listener.create_subscription(RawTpdo, "/mts160/raw", lambda m: got["raw"].append(m), deep)
+        listener.create_subscription(RawTpdo, f"{ns}/mts160/raw", lambda m: got["raw"].append(m), deep)
 
         ex = SingleThreadedExecutor()
         ex.add_node(driver)
@@ -202,7 +203,10 @@ def test_driver_publishes_recorded_frames(rclpy_ctx, fixture_pairs):
             prev = e.counter
 
         for m in got["markers"][:50]:
-            assert any(abs(m.left_x_mm - e.left_x_mm) < 1e-6 and abs(m.left_y_mm - e.left_y_mm) < 1e-6 for e in exp_markers)
+            # float32 fields: 0.1 mm/LSB values above 16 mm carry ~2e-6 of rounding, so compare at 1e-3
+            assert any(abs(m.left_x_mm - e.left_x_mm) < 1e-3 and abs(m.left_y_mm - e.left_y_mm) < 1e-3
+                       and abs(m.right_x_mm - e.right_x_mm) < 1e-3 and abs(m.right_y_mm - e.right_y_mm) < 1e-3
+                       for e in exp_markers)
 
 
 def test_driver_counts_bad_lengths_and_filters_nodes(rclpy_ctx):
@@ -270,11 +274,12 @@ def test_replay_on_vcan0(rclpy_ctx, fixture_pairs, tmp_path):
 
     proc = subprocess.Popen(
         ["ros2", "run", "naviq_mts160", "mts160", "--ros-args",
+         "-r", "__ns:=/replay_vcan",
          "-p", "can_interface_type:=socketcan", "-p", "can_channel:=vcan0", "-p", f"node_id:={node_id}"],
         stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
     listener = rclpy_ctx.create_node("vcan_listener")
     got = []
-    listener.create_subscription(TrackDetection, "/mts160/track", got.append, qos_profile_sensor_data)
+    listener.create_subscription(TrackDetection, "/replay_vcan/mts160/track", got.append, qos_profile_sensor_data)
     ex = SingleThreadedExecutor()
     ex.add_node(listener)
     spin = threading.Thread(target=ex.spin, daemon=True)

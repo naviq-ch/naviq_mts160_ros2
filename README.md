@@ -118,6 +118,17 @@ Measured on the bench (spec §8, `report/summary.md`, `tools/calibration.yaml`):
 * `invert_position` / `invert_angle` flip the driver's output for a mirrored mounting; with both false the
   driver reports exactly what the bench measured.
 
+## Validation status (2026-09-24)
+
+Verified on the bench sensor: the node runs at 99.6 Hz on TPDO1 with TPDO2/TPDO3/heartbeat decoded, `/diagnostics`
+OK, SDO self-test 13/13, receive→publish latency 0.17 ms mean; the recorded-frame fixtures in
+`naviq_mts160/test/fixtures/` come from these sessions and `colcon test` passes (64 tests, vcan0 case skipped
+on WSL2). The physical characterisation was cut short by the operator: the sensor slips on the fixture's
+yaw-motor coupling, so every yaw ≠ 0 test (angle sign and scale, cross-coupling, fork at ±15°, marker at yaw 90)
+is **not done**, and the height / repeatability sweeps were abandoned. The navicode section of the bench bed was
+never decoded by the sensor (counter unchanged in every pass), so `~/navicode` is verified for framing and
+`is_new` only. Details: `report/summary.md`, `tools/bench_notes.md`.
+
 ## Development bench (WSL2)
 
 The driver was validated on a Windows PC running the whole stack in **WSL2
@@ -132,12 +143,19 @@ Fixture tooling (never part of the released driver):
 
 ```bash
 cd tools
+python3 -m naviq_mts160_fixture.hold_e                                # keep the yaw (E) stepper energised, no motion
 python3 -m naviq_mts160_fixture.calibrate baseline --assume-homed     # 7.2
 python3 -m naviq_mts160_fixture.calibrate rotation --assume-homed     # 7.3
 python3 -m naviq_mts160_fixture.survey --assume-homed                 # 7.4
 python3 -m naviq_mts160_fixture.characterize --assume-homed all       # 8.x
+python3 -m naviq_mts160_fixture.export_fixtures                       # data/ -> test/fixtures (spec 9)
 python3 -m naviq_mts160_fixture.report                                # summary.md
 ```
+
+Operator rules encoded in the tooling: the bed is 220 × 200 mm with switches only at the minima (envelope
+X 0–190, Y 0–195); the sensor is rotated only with the carriage at X 100–120 and its tip must stay left of the
+right frame (X 205); the E driver stays energised (an unpowered E lets the yaw slip; its noise on the X min switch
+is why endstop checking is off for ordinary moves and X/Y are homed by hand).
 
 ## Tests
 
@@ -152,7 +170,10 @@ colcon test-result --verbose
 * `test_replay.py`: recorded `candump -l` fixtures with ground-truth JSON
   (`test/fixtures/`) through the decoder and through the live node on
   python-can's in-process `virtual` bus; on a host with `vcan0` the node is
-  also run as a separate process over SocketCAN with the log replayed.
+  also run as a separate process over SocketCAN with the log replayed. The
+  test node runs in its own namespace and `test/conftest.py` picks a private
+  `ROS_DOMAIN_ID` unless one is set, so a driver running on the same host
+  (the bench) cannot feed the tests.
 * `test_launch.py` (`launch_testing`): the node starts from the launch file,
   invalid parameters are rejected, `/diagnostics` goes ERROR→OK when frames
   arrive (cross-process `udp_multicast` backend, needs `python3-msgpack`).

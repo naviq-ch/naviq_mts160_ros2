@@ -1,0 +1,2282 @@
+{
+ "description": "reverse traverse X 150->10 at yaw 0, merge (8.5); 8.5 reverse traverse X 150->10 at yaw 0 (merge)",
+ "node_id": 10,
+ "recorded": "2026-09-24T12:54:22",
+ "source": "bench WSL2 gs_usb via usbipd; driver ~/raw; printer M114 after M400",
+ "log_t0": 1790243643.9350874,
+ "segments": [
+  {
+   "name": "x=150",
+   "t_start": 0.0,
+   "t_end": 0.089883,
+   "printer": {
+    "x": 150.0,
+    "y": 108.48658876297196,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 150.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 2
+    },
+    "left_position_mm": {
+     "mean": -8.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -8.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=148",
+   "t_start": 0.317844,
+   "t_end": 0.408658,
+   "printer": {
+    "x": 148.0,
+    "y": 108.5384585386346,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 148.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 2
+    },
+    "left_position_mm": {
+     "mean": -7.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -8.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=146",
+   "t_start": 0.5665,
+   "t_end": 0.65534,
+   "printer": {
+    "x": 146.0,
+    "y": 108.59032831429722,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 146.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 2
+    },
+    "left_position_mm": {
+     "mean": -7.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -8.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=144",
+   "t_start": 0.8135,
+   "t_end": 0.903519,
+   "printer": {
+    "x": 144.0,
+    "y": 108.64219808995985,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 144.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": -6.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -8.89,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=142",
+   "t_start": 1.062973,
+   "t_end": 1.151484,
+   "printer": {
+    "x": 142.0,
+    "y": 108.69406786562247,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 142.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": -6.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -9.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=140",
+   "t_start": 1.379252,
+   "t_end": 1.467993,
+   "printer": {
+    "x": 140.0,
+    "y": 108.7459376412851,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 140.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": -5.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -9.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=138",
+   "t_start": 1.639425,
+   "t_end": 1.726643,
+   "printer": {
+    "x": 138.0,
+    "y": 108.79780741694772,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 138.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": -4.89,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -8.11,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=136",
+   "t_start": 1.897368,
+   "t_end": 1.984087,
+   "printer": {
+    "x": 136.0,
+    "y": 108.84967719261034,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 136.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": -4.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -7.5,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=134",
+   "t_start": 2.15414,
+   "t_end": 2.253551,
+   "printer": {
+    "x": 134.0,
+    "y": 108.90154696827298,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 134.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": -4.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -6.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=132",
+   "t_start": 2.450804,
+   "t_end": 2.539614,
+   "printer": {
+    "x": 132.0,
+    "y": 108.9534167439356,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 132.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": -3.67,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -6.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=130",
+   "t_start": 2.698106,
+   "t_end": 2.788788,
+   "printer": {
+    "x": 130.0,
+    "y": 109.00528651959823,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 130.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": -3.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -6.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=128",
+   "t_start": 2.955449,
+   "t_end": 3.045574,
+   "printer": {
+    "x": 128.0,
+    "y": 109.05715629526085,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 128.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": -2.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -6.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=126",
+   "t_start": 3.213404,
+   "t_end": 3.303174,
+   "printer": {
+    "x": 126.0,
+    "y": 109.10902607092348,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 126.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": -2.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -8.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=124",
+   "t_start": 3.510709,
+   "t_end": 3.6006,
+   "printer": {
+    "x": 124.0,
+    "y": 109.1608958465861,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 124.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": -1.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -10.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=122",
+   "t_start": 3.759112,
+   "t_end": 3.847781,
+   "printer": {
+    "x": 122.0,
+    "y": 109.21276562224874,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 122.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": -1.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -11.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=120",
+   "t_start": 4.00692,
+   "t_end": 4.096597,
+   "printer": {
+    "x": 120.0,
+    "y": 109.26463539791136,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 120.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 0.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -13.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=118",
+   "t_start": 4.264175,
+   "t_end": 4.354198,
+   "printer": {
+    "x": 118.0,
+    "y": 109.31650517357399,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 118.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 0.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -15.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=116",
+   "t_start": 4.581579,
+   "t_end": 4.671811,
+   "printer": {
+    "x": 116.0,
+    "y": 109.36837494923661,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 116.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 0.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -16.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=114",
+   "t_start": 4.83971,
+   "t_end": 4.929758,
+   "printer": {
+    "x": 114.0,
+    "y": 109.42024472489923,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 114.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 0.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -18.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=112",
+   "t_start": 5.08839,
+   "t_end": 5.191052,
+   "printer": {
+    "x": 112.0,
+    "y": 109.47211450056186,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 112.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 1.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -19.9,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=110",
+   "t_start": 5.365341,
+   "t_end": 5.458315,
+   "printer": {
+    "x": 110.0,
+    "y": 109.52398427622448,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 110.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 1.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -21.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=108",
+   "t_start": 5.664322,
+   "t_end": 5.755967,
+   "printer": {
+    "x": 108.0,
+    "y": 109.57585405188712,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 108.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 1.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -22.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=106",
+   "t_start": 5.931418,
+   "t_end": 6.022925,
+   "printer": {
+    "x": 106.0,
+    "y": 109.62772382754974,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 106.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 2.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -24.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=104",
+   "t_start": 6.187116,
+   "t_end": 6.289085,
+   "printer": {
+    "x": 104.0,
+    "y": 109.67959360321237,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 104.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 3.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -24.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=102",
+   "t_start": 6.463977,
+   "t_end": 6.557098,
+   "printer": {
+    "x": 102.0,
+    "y": 109.73146337887499,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 102.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 4.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -26.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=100",
+   "t_start": 6.771611,
+   "t_end": 6.863165,
+   "printer": {
+    "x": 100.0,
+    "y": 109.78333315453762,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 100.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 4.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -28.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=98",
+   "t_start": 7.036516,
+   "t_end": 7.127738,
+   "printer": {
+    "x": 98.0,
+    "y": 109.83520293020024,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 98.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 4.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -28.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=96",
+   "t_start": 7.3016,
+   "t_end": 7.392797,
+   "printer": {
+    "x": 96.0,
+    "y": 109.88707270586286,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 96.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 4.78,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -28.89,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=94",
+   "t_start": 7.566901,
+   "t_end": 7.658155,
+   "printer": {
+    "x": 94.0,
+    "y": 109.9389424815255,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 94.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 5.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -30.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=92",
+   "t_start": 7.872835,
+   "t_end": 7.963797,
+   "printer": {
+    "x": 92.0,
+    "y": 109.99081225718813,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 92.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 5.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -29.67,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=90",
+   "t_start": 8.137916,
+   "t_end": 8.227822,
+   "printer": {
+    "x": 90.0,
+    "y": 110.04268203285075,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 90.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 5.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -29.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=88",
+   "t_start": 8.401044,
+   "t_end": 8.492485,
+   "printer": {
+    "x": 88.0,
+    "y": 110.09455180851337,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 88.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 4.44,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -29.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=86",
+   "t_start": 8.665434,
+   "t_end": 8.756473,
+   "printer": {
+    "x": 86.0,
+    "y": 110.146421584176,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 86.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 4.56,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -29.22,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=84",
+   "t_start": 8.959056,
+   "t_end": 9.051343,
+   "printer": {
+    "x": 84.0,
+    "y": 110.19829135983862,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 84.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 4.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -29.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=82",
+   "t_start": 9.222754,
+   "t_end": 9.323956,
+   "printer": {
+    "x": 82.0,
+    "y": 110.25016113550126,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 82.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 3.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -27.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=80",
+   "t_start": 9.496495,
+   "t_end": 9.587226,
+   "printer": {
+    "x": 80.0,
+    "y": 110.30203091116388,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 80.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 2.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -26.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=78",
+   "t_start": 9.760459,
+   "t_end": 9.850754,
+   "printer": {
+    "x": 78.0,
+    "y": 110.3539006868265,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 78.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 2.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -25.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=76",
+   "t_start": 10.052943,
+   "t_end": 10.144898,
+   "printer": {
+    "x": 76.0,
+    "y": 110.40577046248913,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 76.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 1.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -24.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=74",
+   "t_start": 10.316074,
+   "t_end": 10.407187,
+   "printer": {
+    "x": 74.0,
+    "y": 110.45764023815175,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 74.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 1.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -23.62,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=72",
+   "t_start": 10.578482,
+   "t_end": 10.670328,
+   "printer": {
+    "x": 72.0,
+    "y": 110.50951001381438,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 72.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 0.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -22.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=70",
+   "t_start": 10.841699,
+   "t_end": 10.931889,
+   "printer": {
+    "x": 70.0,
+    "y": 110.561379789477,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 70.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 0.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -21.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=68",
+   "t_start": 11.133896,
+   "t_end": 11.224571,
+   "printer": {
+    "x": 68.0,
+    "y": 110.61324956513964,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 68.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 0.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -20.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=66",
+   "t_start": 11.396443,
+   "t_end": 11.486386,
+   "printer": {
+    "x": 66.0,
+    "y": 110.66511934080226,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 66.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 0.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -18.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=64",
+   "t_start": 11.659179,
+   "t_end": 11.748113,
+   "printer": {
+    "x": 64.0,
+    "y": 110.71698911646489,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 64.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 0.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -17.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=62",
+   "t_start": 11.91966,
+   "t_end": 12.009904,
+   "printer": {
+    "x": 62.0,
+    "y": 110.76885889212751,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 62.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 0.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -16.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=60",
+   "t_start": 12.221706,
+   "t_end": 12.322504,
+   "printer": {
+    "x": 60.0,
+    "y": 110.82072866779014,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 60.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 0.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -15.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=58",
+   "t_start": 12.492598,
+   "t_end": 12.59063,
+   "printer": {
+    "x": 58.0,
+    "y": 110.87259844345276,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 58.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 0.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -15.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=56",
+   "t_start": 12.774157,
+   "t_end": 12.865512,
+   "printer": {
+    "x": 56.0,
+    "y": 110.9244682191154,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 56.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 0.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -14.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=54",
+   "t_start": 13.036081,
+   "t_end": 13.126661,
+   "printer": {
+    "x": 54.0,
+    "y": 110.97633799477802,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 54.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 0.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -14.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=52",
+   "t_start": 13.316715,
+   "t_end": 13.407448,
+   "printer": {
+    "x": 52.0,
+    "y": 111.02820777044064,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 52.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": -0.5,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -13.75,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=50",
+   "t_start": 13.577523,
+   "t_end": 13.668658,
+   "printer": {
+    "x": 50.0,
+    "y": 111.08007754610327,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 50.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": -1.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -13.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=48",
+   "t_start": 13.839399,
+   "t_end": 13.930022,
+   "printer": {
+    "x": 48.0,
+    "y": 111.13194732176589,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 48.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 0.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -14.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=46",
+   "t_start": 14.099363,
+   "t_end": 14.190877,
+   "printer": {
+    "x": 46.0,
+    "y": 111.18381709742852,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 46.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 0.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -14.22,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=44",
+   "t_start": 14.391235,
+   "t_end": 14.48042,
+   "printer": {
+    "x": 44.0,
+    "y": 111.23568687309114,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 44.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 0.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -15.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=42",
+   "t_start": 14.651472,
+   "t_end": 14.743449,
+   "printer": {
+    "x": 42.0,
+    "y": 111.28755664875378,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 42.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 0.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -16.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=40",
+   "t_start": 14.921536,
+   "t_end": 15.012368,
+   "printer": {
+    "x": 40.0,
+    "y": 111.3394264244164,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 40.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 0.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -16.11,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=38",
+   "t_start": 15.181499,
+   "t_end": 15.272115,
+   "printer": {
+    "x": 38.0,
+    "y": 111.39129620007903,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 38.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 1.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -17.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=36",
+   "t_start": 15.462111,
+   "t_end": 15.552444,
+   "printer": {
+    "x": 36.0,
+    "y": 111.44316597574165,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 36.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 2.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -18.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=34",
+   "t_start": 15.721933,
+   "t_end": 15.812848,
+   "printer": {
+    "x": 34.0,
+    "y": 111.49503575140427,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 34.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 2.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -18.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=32",
+   "t_start": 15.982029,
+   "t_end": 16.073195,
+   "printer": {
+    "x": 32.0,
+    "y": 111.5469055270669,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 32.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 2.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -20.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=30",
+   "t_start": 16.24296,
+   "t_end": 16.343327,
+   "printer": {
+    "x": 30.0,
+    "y": 111.59877530272954,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 30.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 2.78,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -20.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=28",
+   "t_start": 16.532333,
+   "t_end": 16.621851,
+   "printer": {
+    "x": 28.0,
+    "y": 111.65064507839216,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 28.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 3.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -21.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=26",
+   "t_start": 16.792781,
+   "t_end": 16.881692,
+   "printer": {
+    "x": 26.0,
+    "y": 111.70251485405478,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 26.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 3.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -22.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=24",
+   "t_start": 17.052423,
+   "t_end": 17.142426,
+   "printer": {
+    "x": 24.0,
+    "y": 111.7543846297174,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 24.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 3.67,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -22.22,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=22",
+   "t_start": 17.321589,
+   "t_end": 17.412074,
+   "printer": {
+    "x": 22.0,
+    "y": 111.80625440538003,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 22.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 4.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -23.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=20",
+   "t_start": 17.61138,
+   "t_end": 17.7006,
+   "printer": {
+    "x": 20.0,
+    "y": 111.85812418104265,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 20.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 4.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -24.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=18",
+   "t_start": 17.871067,
+   "t_end": 17.960238,
+   "printer": {
+    "x": 18.0,
+    "y": 111.90999395670528,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 18.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 4.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -24.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=16",
+   "t_start": 18.130656,
+   "t_end": 18.220109,
+   "printer": {
+    "x": 16.0,
+    "y": 111.96186373236792,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 16.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 4.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -24.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=14",
+   "t_start": 18.390132,
+   "t_end": 18.478997,
+   "printer": {
+    "x": 14.0,
+    "y": 112.01373350803054,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 14.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 4.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -24.62,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=12",
+   "t_start": 18.678391,
+   "t_end": 18.768701,
+   "printer": {
+    "x": 12.0,
+    "y": 112.06560328369316,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 12.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 4.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -24.56,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  },
+  {
+   "name": "x=10",
+   "t_start": 18.938572,
+   "t_end": 19.028466,
+   "printer": {
+    "x": 10.0,
+    "y": 112.11747305935579,
+    "z": 20.0,
+    "e": 6.738678204439411,
+    "yaw_deg": 0.0
+   },
+   "truth": {
+    "x": 10.0,
+    "yaw_deg": 0.0
+   },
+   "expect": {
+    "strength": {
+     "min": 3
+    },
+    "left_position_mm": {
+     "mean": 4.0,
+     "tol": 1.5
+    },
+    "left_angle_deg": {
+     "mean": -24.0,
+     "tol": 1.5
+    },
+    "tape_detected": {
+     "fraction_true_min": 1.0
+    }
+   }
+  }
+ ],
+ "exported_from": "data/20260924_125334_char_fork_marker_navicode_height_repeat/merge_yaw+0.log"
+}
