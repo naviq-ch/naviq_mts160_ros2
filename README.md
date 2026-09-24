@@ -15,7 +15,7 @@ Target: ROS 2 **Jazzy** / Ubuntu 24.04 / Python 3.12. Licence: Apache-2.0.
 
 ## Five-minute quickstart
 
-The full installation and test manual is [docs/INSTALL.md](docs/INSTALL.md).
+Manuals: [docs/INSTALL.md](docs/INSTALL.md) (install and test) and [docs/USER_MANUAL.md](docs/USER_MANUAL.md) (topics, data formats, parameters, diagnostics, usage).
 
 Prerequisites: a Jazzy install, the sensor on a CAN bus at 500 kbit/s with
 node ID 10, auto-run enabled and TPDO1 enabled (factory tool or serial

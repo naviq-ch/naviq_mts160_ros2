@@ -4,6 +4,9 @@ This manual takes a robot from a bare Ubuntu 24.04 / ROS 2 Jazzy install to a
 running `mts160` node, and then checks it in three stages: without hardware,
 with a recorded sensor log, and with the sensor on the bus.
 
+The topics, message fields, parameters and diagnostics are described in the
+[user manual](USER_MANUAL.md).
+
 Contents
 
 1. [What gets installed](#1-what-gets-installed)
